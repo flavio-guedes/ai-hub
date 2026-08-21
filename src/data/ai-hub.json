@@ -1,94 +1,9 @@
 {
-  "meta": {
-    "name": "AI Hub",
-    "subtitle": "AI Agent Command Center",
-    "owner": "Flávio",
-    "version": "0.1.0"
-  },
-  "humans": [
-    {
-      "id": "flavio",
-      "name": "Flávio",
-      "role": "Human Operator",
-      "emoji": "🧑‍💼",
-      "status": "ONLINE",
-      "department": "Human",
-      "project": "AI Hub",
-      "task": "Governar operação",
-      "progress": 100,
-      "coordinator": "—",
-      "location": "Escritório",
-      "color": "#fbbf24"
-    }
-  ],
+  "meta": { "name": "AI Hub", "version": "0.1.0" },
   "agents": [
-    {
-      "id": "master",
-      "name": "Master",
-      "role": "AI Operations Coordinator",
-      "emoji": "🎯",
-      "status": "WORKING",
-      "department": "Operations",
-      "project": "AI Hub",
-      "task": "Distribuir tarefas",
-      "progress": 72,
-      "coordinator": "Flávio",
-      "location": "Command Center",
-      "color": "#22d3ee",
-      "monitor": true
-    },
-    {
-      "id": "creative-director",
-      "name": "Diretor Criativo",
-      "role": "Creative Director / Brand / Creative Planning",
-      "emoji": "🎨",
-      "status": "WORKING",
-      "department": "Creative",
-      "project": "EPQ",
-      "task": "Creative System",
-      "progress": 68,
-      "coordinator": "Master",
-      "location": "Creative Studio",
-      "color": "#c084fc"
-    },
-    {
-      "id": "product-designer",
-      "name": "Product Designer",
-      "role": "Product Design / UX / UI",
-      "emoji": "🧩",
-      "status": "ANALYZING",
-      "department": "Product",
-      "project": "AI Hub",
-      "task": "Dashboard UX",
-      "progress": 44,
-      "coordinator": "Master",
-      "location": "Product Lab",
-      "color": "#60a5fa"
-    }
+    { "id": "master", "name": "Master", "status": "WORKING", "progress": 72, "location": "Command Center", "color": "#22d3ee" }
   ],
-  "talentPool": [
-    { "id": "strategist", "name": "Estrategista", "role": "Strategy", "emoji": "♟️", "status": "WAITING" },
-    { "id": "product-manager", "name": "Product Manager", "role": "Product", "emoji": "📋", "status": "WAITING" },
-    { "id": "commercial", "name": "Comercial", "role": "Commercial", "emoji": "📞", "status": "WAITING" },
-    { "id": "growth", "name": "Growth", "role": "Growth", "emoji": "📈", "status": "WAITING" },
-    { "id": "operations", "name": "Operations", "role": "Operations", "emoji": "⚙️", "status": "WAITING" },
-    { "id": "finance", "name": "Financeiro", "role": "Finance", "emoji": "💰", "status": "WAITING" },
-    { "id": "customer-success", "name": "Customer Success", "role": "CS", "emoji": "🤝", "status": "WAITING" },
-    { "id": "data", "name": "Data Analyst", "role": "Data", "emoji": "📊", "status": "WAITING" },
-    { "id": "copywriter", "name": "Copywriter", "role": "Copy", "emoji": "✍️", "status": "WAITING" },
-    { "id": "social-media", "name": "Social Media", "role": "Social", "emoji": "📣", "status": "WAITING" }
-  ],
-  "projects": [
-    { "id": "epq", "name": "EPQ", "agents": ["creative-director"], "status": "Ativo", "progress": 68 },
-    { "id": "aihub", "name": "AI Hub", "agents": ["master", "product-designer"], "status": "Ativo", "progress": 44 },
-    { "id": "intern", "name": "Projetos Internos", "agents": [], "status": "Backlog", "progress": 0 }
-  ],
-  "tasks": [
-    { "id": "t1", "agentId": "master", "project": "AI Hub", "title": "Distribuir tarefas", "status": "WORKING", "progress": 72 },
-    { "id": "t2", "agentId": "creative-director", "project": "EPQ", "title": "Creative System", "status": "WORKING", "progress": 68 },
-    { "id": "t3", "agentId": "product-designer", "project": "AI Hub", "title": "Dashboard UX", "status": "ANALYZING", "progress": 44 },
-    { "id": "t4", "agentId": "master", "project": "AI Hub", "title": "Review bloqueios", "status": "WAITING", "progress": 0 },
-    { "id": "t5", "agentId": "creative-director", "project": "EPQ", "title": "Format Guide", "status": "WAITING", "progress": 0 },
-    { "id": "t6", "agentId": "product-designer", "project": "AI Hub", "title": "Prototype v1", "status": "WAITING", "progress": 0 }
-  ]
+  "projects": [],
+  "activity": [],
+  "approvals": []
 }
