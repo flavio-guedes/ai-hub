@@ -3,7 +3,7 @@
     "name": "AI Hub",
     "subtitle": "AI Agent Command Center",
     "owner": "Flávio",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "humans": [
     {
@@ -46,7 +46,7 @@
     {
       "id": "creative-director",
       "name": "Diretor Criativo",
-      "role": "Creative Director / Brand / Creative Planning",
+      "role": "Creative Director / Brand",
       "emoji": "🎨",
       "status": "WORKING",
       "department": "Creative",
@@ -91,17 +91,68 @@
     { "id": "social-media", "name": "Social Media", "role": "Social", "emoji": "📣", "status": "WAITING" }
   ],
   "projects": [
-    { "id": "epq", "name": "EPQ", "agents": ["creative-director"], "status": "Ativo", "progress": 68 },
-    { "id": "aihub", "name": "AI Hub", "agents": ["master", "product-designer"], "status": "Ativo", "progress": 44 },
-    { "id": "intern", "name": "Projetos Internos", "agents": [], "status": "Backlog", "progress": 0 }
+    {
+      "id": "epq",
+      "name": "EPQ",
+      "agents": ["creative-director"],
+      "status": "Ativo",
+      "progress": 68,
+      "milestones": [
+        { "title": "Brand System", "status": "Concluído" },
+        { "title": "Playbook HTML", "status": "Em andamento" },
+        { "title": "Automação de Posts", "status": "Pendente" }
+      ]
+    },
+    {
+      "id": "aihub",
+      "name": "AI Hub",
+      "agents": ["master", "product-designer"],
+      "status": "Ativo",
+      "progress": 44,
+      "milestones": [
+        { "title": "Dashboard MVP", "status": "Em andamento" },
+        { "title": "Integração JSON", "status": "Concluído" },
+        { "title": "Conexão Hermes", "status": "Pendente" }
+      ]
+    },
+    {
+      "id": "intern",
+      "name": "Projetos Internos",
+      "agents": [],
+      "status": "Backlog",
+      "progress": 0,
+      "milestones": [
+        { "title": "Módulo Financeiro", "status": "Pendente" }
+      ]
+    }
   ],
   "tasks": [
-    { "id": "t1", "agentId": "master", "project": "AI Hub", "title": "Distribuir tarefas", "status": "WORKING", "progress": 72 },
-    { "id": "t2", "agentId": "creative-director", "project": "EPQ", "title": "Creative System", "status": "WORKING", "progress": 68 },
-    { "id": "t3", "agentId": "product-designer", "project": "AI Hub", "title": "Dashboard UX", "status": "ANALYZING", "progress": 44 },
-    { "id": "t4", "agentId": "master", "project": "AI Hub", "title": "Review bloqueios", "status": "WAITING", "progress": 0 },
-    { "id": "t5", "agentId": "creative-director", "project": "EPQ", "title": "Format Guide", "status": "WAITING", "progress": 0 },
-    { "id": "t6", "agentId": "product-designer", "project": "AI Hub", "title": "Prototype v1", "status": "WAITING", "progress": 0 }
+    { "id": "t1", "agentId": "master", "project": "AI Hub", "title": "Distribuir tarefas", "status": "WORKING", "progress": 72, "milestones": [
+      { "title": "Plano de semana", "status": "Concluído" },
+      { "title": "Alocação por projeto", "status": "Concluído" },
+      { "title": "Ajuste de bloqueios", "status": "Em andamento" }
+    ]},
+    { "id": "t2", "agentId": "creative-director", "project": "EPQ", "title": "Creative System", "status": "WORKING", "progress": 68, "milestones": [
+      { "title": "Paleta e tom de voz", "status": "Concluído" },
+      { "title": "Format guide", "status": "Em andamento" },
+      { "title": "Biblioteca de peças", "status": "Pendente" }
+    ]},
+    { "id": "t3", "agentId": "product-designer", "project": "AI Hub", "title": "Dashboard UX", "status": "ANALYZING", "progress": 44, "milestones": [
+      { "title": "Wireframes", "status": "Concluído" },
+      { "title": "Prototype v1", "status": "Em andamento" }
+    ]},
+    { "id": "t4", "agentId": "master", "project": "AI Hub", "title": "Review bloqueios", "status": "WAITING", "progress": 0, "milestones": [
+      { "title": "Coletar bloqueios", "status": "Em andamento" },
+      { "title": "Propor solução", "status": "Pendente" }
+    ]},
+    { "id": "t5", "agentId": "creative-director", "project": "EPQ", "title": "Format Guide", "status": "WAITING", "progress": 0, "milestones": [
+      { "title": "Definir templates", "status": "Pendente" },
+      { "title": "Validar exemplos", "status": "Pendente" }
+    ]},
+    { "id": "t6", "agentId": "product-designer", "project": "AI Hub", "title": "Prototype v1", "status": "WAITING", "progress": 0, "milestones": [
+      { "title": "Layout mobile", "status": "Pendente" },
+      { "title": "Layout desktop", "status": "Pendente" }
+    ]}
   ],
   "feed": [
     { "time": "12:30", "msg": "Flávio aprovou abertura do AI Hub.", "color": "#fbbf24" },
