@@ -325,6 +325,23 @@
       text-transform: uppercase;
     }
 
+    /* Pixel sprite system */
+    .sprite-pixel {
+      position: relative;
+      width: 56px; height: 72px;
+      image-rendering: pixelated;
+    }
+    .sprite-pixel canvas { display: block; width: 100%; height: 100%; }
+    .pixel-office-grid {
+      position: absolute; inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(0deg, rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+      background-size: 18px 18px;
+      opacity: 0.6;
+    }
+
     /* Floating / behavior */
     .agent-spot[data-status="WORKING"] .char { animation: float 3.2s ease-in-out infinite; }
     .agent-spot[data-status="ANALYZING"] .char { animation: float 3.8s ease-in-out infinite; }
@@ -755,6 +772,97 @@
       `;
     }
 
+    function drawPixelSprite(canvas, rows, palette) {
+      const ctx = canvas.getContext('2d');
+      canvas.width = rows[0].length;
+      canvas.height = rows.length;
+      ctx.imageSmoothingEnabled = false;
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      rows.forEach((row, y) => {
+        [...row].forEach((ch, x) => {
+          const color = palette[ch];
+          if (!color || color === 'transparent') return;
+          ctx.fillStyle = color;
+          ctx.fillRect(x, y, 1, 1);
+        });
+      });
+    }
+
+    const PX = {
+      '.': 'transparent',
+      '#': '#0b1020',
+      'W': '#e2e8f0',
+      'S': '#1f2937',
+      'B': '#334155',
+      'Y': '#fbbf24',
+      'G': '#34d399',
+      'R': '#f87171',
+      'C': '#c084fc',
+      'M': '#60a5fa',
+      'O': '#f97316',
+      'P': '#22d3ee',
+      'D': '#fde68a'
+    };
+
+    const CHAR = {
+      master: [
+        '..DWW.',
+        '.DWWWD',
+        '.WWWWW',
+        'WWWWWW',
+        '.BBBB.',
+        '.BBBB.',
+        '..B.B.',
+        '..B.B.',
+        '..S.S.',
+        '..S.S.'
+      ],
+      'creative-director': [
+        '..CWW.',
+        '.CWWWC',
+        '.WWWWW',
+        'WWWWWW',
+        '.BBBB.',
+        '.BBBB.',
+        '..B.B.',
+        '..B.B.',
+        '..S.S.',
+        '..S.S.'
+      ],
+      'product-designer': [
+        '..MWM.',
+        '.MWWWM',
+        '.WWWWW',
+        'WWWWWW',
+        '.BBBB.',
+        '.BBBB.',
+        '..B.B.',
+        '..B.B.',
+        '..S.S.',
+        '..S.S.'
+      ],
+      flavio: [
+        '..YWW.',
+        '.YWWWY',
+        '.WWWWW',
+        'WWWWWW',
+        '.BBBB.',
+        '.BBBB.',
+        '..B.B.',
+        '..B.B.',
+        '..S.S.',
+        '..S.S.'
+      ]
+    };
+
+    function spriteHTMLFor(entity) {
+      const color = entity.color || '#22d3ee';
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='64' height='80' viewBox='0 0 64 80' shape-rendering='crispEdges'><rect x='20' y='4' width='24' height='6' fill='${color}' /><rect x='12' y='10' width='40' height='10' fill='${color}' /><rect x='4' y='20' width='56' height='12' fill='${color}' /><rect x='8' y='32' width='48' height='12' fill='${color}' /><rect x='4' y='44' width='56' height='12' fill='${color}' /><rect x='16' y='56' width='32' height='10' fill='${color}' /><rect x='24' y='66' width='16' height='6' fill='${color}' /><rect x='20' y='4' width='24' height='6' fill='white' opacity='.15' /><rect x='12' y='10' width='40' height='10' fill='white' opacity='.1' /><rect x='20' y='14' width='24' height='2' fill='white' opacity='.2' /></svg>`;
+      const desk = entity.monitor ? '<div class="desk"></div>' : '';
+      const monitor = entity.monitor ? '<div class="monitor"></div>' : '';
+      return `<div class="sprite-pixel">${desk}${monitor}${svg}<div class="status-badge">${entity.status.replace('_',' ')}</div></div>`;
+    }
+
     function renderStage() {
       const stage = $("#stage");
       stage.innerHTML = "";
@@ -772,15 +880,7 @@
         spot.style.gridColumn = `${s.x} / span ${s.w}`;
         spot.style.gridRow = `${s.y} / span ${s.h}`;
         const isWaiting = s.entity.status === "WAITING";
-        spot.innerHTML = `
-          <div class="sprite">
-            ${s.entity.monitor ? '<div class="monitor"></div>' : ''}
-            ${isWaiting ? '<div class="chair"></div>' : '<div class="desk"></div>'}
-            <div class="project-tag">${s.entity.project}</div>
-            <div class="char" style="color:${s.entity.color || 'var(--text)'}">${s.entity.emoji}</div>
-            <div class="status-badge">${s.entity.status.replace("_", " ")}</div>
-          </div>
-        `;
+        spot.innerHTML = `<div class="sprite">${spriteHTMLFor(s.entity)}</div>`;
         spot.addEventListener("click", () => openDetail(s.entity));
         stage.appendChild(spot);
       });
