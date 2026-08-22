@@ -98,15 +98,15 @@
     /* Layout */
     .app {
       display: grid;
-      grid-template-columns: 280px 1fr 360px;
-      grid-template-rows: 64px 1fr 220px;
+      grid-template-columns: 250px 1fr 300px;
+      grid-template-rows: 52px 42px 1fr;
       grid-template-areas:
         "header header header"
-        "nav    office  right"
-        "nav    right2  right";
+        "controls controls controls"
+        "nav main-view right";
       height: 100vh;
-      gap: 12px;
-      padding: 12px;
+      gap: 10px;
+      padding: 10px;
     }
 
     /* Header */
@@ -115,12 +115,12 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
+      padding: 0 14px;
     }
     .header h1 {
       margin: 0;
-      font-size: 1.05rem;
-      letter-spacing: 0.25em;
+      font-size: 1rem;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
       text-shadow: 0 0 12px rgba(34,211,238,0.25);
     }
@@ -133,10 +133,56 @@
       border-radius: 10px;
       border: 1px solid var(--border);
       background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
-      min-width: 72px;
+      min-width: 64px;
     }
     .kpi .label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.14em; }
-    .kpi .value { font-size: 18px; font-weight: 700; }
+    .kpi .value { font-size: 16px; font-weight: 700; }
+
+    /* Top controls */
+    .header-controls {
+      grid-area: controls;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 6px;
+      flex-wrap: wrap;
+    }
+    .chip {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .chip.active {
+      border-color: rgba(34,211,238,0.6);
+      color: var(--accent);
+      background: rgba(34,211,238,0.08);
+      box-shadow: 0 0 0 3px rgba(34,211,238,0.08);
+    }
+    select {
+      background: rgba(255,255,255,0.03);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 8px;
+      font-size: 12px;
+      outline: none;
+    }
+    .main-view {
+      grid-area: main-view;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+      padding: 10px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
 
     /* Nav */
     .nav {

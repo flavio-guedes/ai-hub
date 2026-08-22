@@ -18,14 +18,35 @@
         </div>
       </div>
       <div class="kpis" id="kpis">
-        <div class="kpi"><span class="label">Agents</span><span class="value" id="kpi-agents">3</span></div>
+        <div class="kpi"><span class="label">Agentes</span><span class="value" id="kpi-agents">3</span></div>
         <div class="kpi"><span class="label">Online</span><span class="value" id="kpi-online">3</span></div>
-        <div class="kpi"><span class="label">Working</span><span class="value" id="kpi-working">2</span></div>
-        <div class="kpi"><span class="label">Waiting</span><span class="value" id="kpi-waiting">10</span></div>
-        <div class="kpi"><span class="label">Projects</span><span class="value" id="kpi-projects">3</span></div>
-        <div class="kpi"><span class="label">Tasks</span><span class="value" id="kpi-tasks">12</span></div>
-        <div class="kpi"><span class="label">Alerts</span><span class="value" id="kpi-alerts">0</span></div>
+        <div class="kpi"><span class="label">Trabalhando</span><span class="value" id="kpi-working">2</span></div>
+        <div class="kpi"><span class="label">Aguardando</span><span class="value" id="kpi-waiting">10</span></div>
+        <div class="kpi"><span class="label">Projetos</span><span class="value" id="kpi-projects">3</span></div>
+        <div class="kpi"><span class="label">Tarefas</span><span class="value" id="kpi-tasks">12</span></div>
+        <div class="kpi"><span class="label">Alertas</span><span class="value" id="kpi-alerts">0</span></div>
       </div>
+    </header>
+
+    <header class="header-controls">
+      <span class="text-xs text-dim" style="letter-spacing:0.16em;text-transform:uppercase">Visualização</span>
+      <button class="chip active" data-view="list">Lista</button>
+      <button class="chip" data-view="kanban">Kanban</button>
+      <button class="chip" data-view="gantt">Gantt</button>
+      <button class="chip" data-view="steps">Etapas</button>
+      <button class="chip" data-view="workload">Carga</button>
+      <span class="text-xs text-dim" style="margin-left:6px;letter-spacing:0.16em;text-transform:uppercase">Status</span>
+      <select id="filter-status" style="background:rgba(255,255,255,0.03);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:12px">
+        <option value="all">Todos</option>
+        <option value="WORKING">Trabalhando</option>
+        <option value="WAITING">Aguardando</option>
+        <option value="ANALYZING">Analisando</option>
+        <option value="OFFLINE">Offline</option>
+      </select>
+      <span class="text-xs text-dim" style="margin-left:6px;letter-spacing:0.16em;text-transform:uppercase">Projeto</span>
+      <select id="filter-project" style="background:rgba(255,255,255,0.03);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:6px 8px;font-size:12px">
+        <option value="all">Todos</option>
+      </select>
     </header>
 
     <!-- Nav -->
@@ -33,10 +54,6 @@
       <div class="nav-section">
         <h3>Operação</h3>
         <div id="agent-list"></div>
-      </div>
-      <div class="nav-section">
-        <h3>Talent Pool</h3>
-        <div id="talent-list"></div>
       </div>
       <div class="nav-section">
         <h3>Projetos</h3>
@@ -47,6 +64,17 @@
         <div class="hierarchy" id="hierarchy"></div>
       </div>
     </nav>
+
+    <section class="main-view" id="main-view">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div>
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-dim)">Operação</div>
+          <div style="font-size:18px;font-weight:700" id="view-title">Projetos</div>
+        </div>
+        <div style="font-size:11px;color:var(--text-dim)" id="view-subtitle">Visão unificada</div>
+      </div>
+      <div id="view-stage" style="flex:1;min-height:0;overflow:auto"></div>
+    </section>
 
     <!-- Office -->
     <section class="office glass" id="office">
@@ -85,18 +113,6 @@
 
     <aside class="right2">
       <div class="panel">
-        <h3>Talent Pool</h3>
-        <div class="talent-grid" id="talent-grid"></div>
-      </div>
-      <div class="panel">
-        <h3>Hire Agent</h3>
-        <div class="text-sm text-dim" style="margin-bottom:8px">Selecione um agente da pool para contratar.</div>
-        <div class="flex gap-2">
-          <button id="btn-hire" style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.03);color:var(--text);cursor:pointer">Contratar Selecionado</button>
-        </div>
-        <div id="hire-status" class="text-xs text-dim" style="margin-top:8px"></div>
-      </div>
-      <div class="panel">
         <h3>Foco do Dia</h3>
         <div id="focus-day" class="text-sm" style="margin-top:4px">Carregando foco...</div>
       </div>
@@ -110,17 +126,6 @@
           <a class="chip" href="https://www.notion.so" target="_blank" rel="noopener">Notion</a>
           <a class="chip" href="https://www.meta.com" target="_blank" rel="noopener">Meta</a>
         </div>
-      </div>
-      <div class="panel">
-        <h3>Visualização</h3>
-        <div class="flex gap-2 text-xs" style="flex-wrap:wrap;margin-top:4px" id="view-controls">
-          <button class="chip active" data-view="list">Lista</button>
-          <button class="chip" data-view="kanban">Kanban</button>
-          <button class="chip" data-view="gantt">Gantt</button>
-          <button class="chip" data-view="steps">Etapas</button>
-          <button class="chip" data-view="workload">Carga</button>
-        </div>
-        <div id="view-stage" style="margin-top:8px;min-height:120px"></div>
       </div>
     </aside>
 
@@ -777,7 +782,7 @@
       if (!detail.contains(e.target) && !office.contains(e.target) && !nav.contains(e.target) && !right.contains(e.target) && !right2.contains(e.target)) closeDetail();
     });
 
-    document.getElementById("view-controls").addEventListener("click", (e) => {
+    document.querySelector('.header-controls').addEventListener('click', (e) => {
       const btn = e.target.closest('button[data-view]');
       if (!btn) return;
       setView(btn.dataset.view);
