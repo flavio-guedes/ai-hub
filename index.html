@@ -35,10 +35,6 @@
         <div id="agent-list"></div>
       </div>
       <div class="nav-section">
-        <h3>Talent Pool</h3>
-        <div id="talent-list"></div>
-      </div>
-      <div class="nav-section">
         <h3>Projetos</h3>
         <div id="project-list"></div>
       </div>
@@ -85,16 +81,19 @@
 
     <aside class="right2">
       <div class="panel">
-        <h3>Talent Pool</h3>
-        <div class="talent-grid" id="talent-grid"></div>
+        <h3>Foco do Dia</h3>
+        <div id="focus-day" class="text-sm" style="margin-top:4px">Carregando foco...</div>
       </div>
       <div class="panel">
-        <h3>Hire Agent</h3>
-        <div class="text-sm text-dim" style="margin-bottom:8px">Selecione um agente da pool para contratar.</div>
-        <div class="flex gap-2">
-          <button id="btn-hire" style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,0.03);color:var(--text);cursor:pointer">Contratar Selecionado</button>
+        <h3>Acesso Rápido</h3>
+        <div class="flex gap-2 text-xs" style="flex-wrap:wrap;margin-top:4px">
+          <a class="chip" href="https://drive.google.com" target="_blank" rel="noopener">Drive</a>
+          <a class="chip" href="https://github.com/flavio-guedes" target="_blank" rel="noopener">GitHub</a>
+          <a class="chip" href="https://www.figma.com" target="_blank" rel="noopener">Figma</a>
+          <a class="chip" href="https://telegram.org" target="_blank" rel="noopener">Telegram</a>
+          <a class="chip" href="https://www.notion.so" target="_blank" rel="noopener">Notion</a>
+          <a class="chip" href="https://www.meta.com" target="_blank" rel="noopener">Meta</a>
         </div>
-        <div id="hire-status" class="text-xs text-dim" style="margin-top:8px"></div>
       </div>
     </aside>
 
@@ -547,6 +546,18 @@
       });
     }
 
+    function renderFocus() {
+      const el = $("#focus-day");
+      if (!el) return;
+      const working = (data.agents || []).filter(a => a.status === "WORKING");
+      if (!working.length) {
+        el.textContent = "Nenhum agente em foco no momento.";
+        return;
+      }
+      const names = working.map(a => a.name).join(", ");
+      el.innerHTML = `<div style="font-weight:700">${names}</div><div class="text-xs text-dim" style="margin-top:4px">Operação ativa agora</div>`;
+    }
+
     function renderTalentGrid() {
       const grid = $("#talent-grid");
       grid.innerHTML = "";
@@ -665,11 +676,11 @@
     function simulateActivity() {
       const events = [
         () => { const a = data.agents[Math.floor(Math.random()*data.agents.length)]; return `${a.name} está atualizando progresso.`; },
-        () => `Master redistribuiu prioridades.`,
+        () => `Logi-X redistribuiu prioridades.`,
         () => `Novo evento sincronizado em ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.`,
-        () => `Diretor Criativo finalizou revisão.`
+        () => `Visiona finalizou revisão.`
       ];
-      const colors = ["#22d3ee", "#c084fc", "#60a5fa", "#34d399", "#fbbf24"];
+      const colors = ["#36D8F0", "#B87CFF", "#69AFFF", "#46D89C", "#FFC247"];
       const msg = events[Math.floor(Math.random()*events.length)]();
       data.feed.unshift({ time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), msg, color: colors[Math.floor(Math.random()*colors.length)] });
       if (data.feed.length > 30) data.feed.pop();
@@ -690,6 +701,7 @@
       renderFeed();
       renderTalentGrid();
       renderTaskList();
+      renderFocus();
       if (selectedAgentId) {
         const all = [...data.humans, ...data.agents];
         const found = all.find(a => a.id === selectedAgentId);
