@@ -6,20 +6,24 @@
   <title>AI HUB — AI AGENT COMMAND CENTER</title>
   <style>
     :root {
-      --bg: #0b1020;
-      --panel: #0f172a;
-      --border: #1e293b;
-      --accent: #22d3ee;
+      --bg: #070D18;
+      --bg-secondary: #0B1322;
+      --panel: #101A2B;
+      --panel-hover: #16243A;
+      --border: #23344D;
+      --accent: #36D8F0;
       --accent-2: #818cf8;
-      --green: #34d399;
-      --blue: #60a5fa;
-      --purple: #c084fc;
-      --yellow: #fbbf24;
+      --green: #46D89C;
+      --blue: #69AFFF;
+      --purple: #B87CFF;
+      --yellow: #FFC247;
       --orange: #f97316;
-      --red: #f87171;
-      --muted: #94a3b8;
-      --text: #e2e8f0;
-      --text-dim: #94a3b8;
+      --red: #FF6B6B;
+      --muted: #93A4BA;
+      --text: #D7E0EC;
+      --text-dim: #93A4BA;
+      --radius: 10px;
+      --radius-sm: 6px;
     }
 
     * { box-sizing: border-box; }
@@ -855,22 +859,26 @@
       const el = $("#hierarchy");
       const humans = data.humans.map(h => ({ ...h, children: [] }));
       const agents = data.agents.map(a => ({ ...a, children: [] }));
-      const master = agents.find(a => a.id === "master");
-      const flavio = humans[0];
+      const pixelion = humans[0];
+      const logix = agents.find(a => a.id === "logix");
       const creatives = agents.filter(a => a.department === "Creative");
       const products = agents.filter(a => a.department === "Product");
+      const strategy = agents.filter(a => a.department === "Strategy");
 
       const buildNode = (n) => `<div class="h-node"><div style="font-weight:700">${n.emoji} ${n.name}</div><div class="text-xs text-dim">${n.role}</div></div>`;
       el.innerHTML = `
-        ${buildNode(flavio)}
+        ${buildNode(pixelion)}
         <div class="h-branch"></div>
-        ${buildNode(master)}
+        ${buildNode(logix)}
         <div class="h-row">
           <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
             ${creatives.map(c => `<div>${buildNode(c)}</div>`).join("")}
           </div>
           <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
             ${products.map(p => `<div>${buildNode(p)}</div>`).join("")}
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+            ${strategy.map(s => `<div>${buildNode(s)}</div>`).join("")}
           </div>
         </div>
       `;
@@ -990,10 +998,10 @@
       const stage = $("#stage");
       stage.innerHTML = "";
       const slots = [
-        { x: 3, y: 1, w: 3, h: 3, entity: data.agents.find(a => a.id === "master") },
-        { x: 8, y: 1, w: 3, h: 3, entity: data.agents.find(a => a.id === "creative-director") },
-        { x: 2, y: 4, w: 3, h: 3, entity: data.agents.find(a => a.id === "product-designer") },
-        { x: 6, y: 4, w: 3, h: 3, entity: data.humans[0] }
+        { x: 3, y: 1, w: 3, h: 3, entity: data.agents.find(a => a.id === "logix") },
+        { x: 8, y: 1, w: 3, h: 3, entity: data.agents.find(a => a.id === "visiona") },
+        { x: 2, y: 4, w: 3, h: 3, entity: data.agents.find(a => a.id === "uxel") },
+        { x: 6, y: 4, w: 3, h: 3, entity: data.humans.find(a => a.id === "pixelion") }
       ];
       slots.forEach(s => {
         if (!s.entity) return;
@@ -1155,12 +1163,12 @@
           id: talent.id, name: talent.name, role: talent.role, emoji: talent.emoji,
           status: "WORKING", department: talent.role, project: "AI Hub", task: "Onboarding",
           progress: 0, lastActivity: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          nextAction: "Receber tarefa", coordinator: "Master", isHired: true, location: "Escritório",
-          color: "#fbbf24", monitor: false
+          nextAction: "Receber tarefa", coordinator: "Pixelion", isHired: true, location: "Escritório",
+          color: "#FFC247", monitor: false
         };
         data.agents.push(newAgent);
         data.tasks.push({ id: "t" + Date.now(), agentId: newAgent.id, project: "AI Hub", title: "Onboarding", status: "WORKING", progress: 0 });
-        data.feed.unshift({ time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), msg: `${talent.name} foi contratado e entrou em operação.`, color: "#34d399" });
+        data.feed.unshift({ time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), msg: `${talent.name} foi contratado e entrou em operação.`, color: "#46D89C" });
         data.talentPool.splice(idx, 1);
         selectedTalentId = null;
         refresh();
