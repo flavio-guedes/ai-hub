@@ -28,6 +28,27 @@
       </div>
     </header>
 
+    <header class="header-controls">
+      <span class="text-xs text-dim" style="letter-spacing:0.16em;text-transform:uppercase">Visualização</span>
+      <button class="chip active" data-view="list">Lista</button>
+      <button class="chip" data-view="kanban">Kanban</button>
+      <button class="chip" data-view="gantt">Gantt</button>
+      <button class="chip" data-view="steps">Etapas</button>
+      <button class="chip" data-view="workload">Carga</button>
+      <span class="text-xs text-dim" style="margin-left:6px;letter-spacing:0.16em;text-transform:uppercase">Status</span>
+      <select id="filter-status">
+        <option value="all">Todos</option>
+        <option value="WORKING">Trabalhando</option>
+        <option value="WAITING">Aguardando</option>
+        <option value="ANALYZING">Analisando</option>
+        <option value="OFFLINE">Offline</option>
+      </select>
+      <span class="text-xs text-dim" style="margin-left:6px;letter-spacing:0.16em;text-transform:uppercase">Projeto</span>
+      <select id="filter-project">
+        <option value="all">Todos</option>
+      </select>
+    </header>
+
     <!-- Nav -->
     <nav class="nav" id="nav">
       <div class="nav-section">
@@ -56,6 +77,17 @@
       <div class="stage" id="stage"></div>
       <div class="office-floor"></div>
       <div class="office-tooltip" id="office-tooltip"></div>
+    </section>
+
+    <section class="main-view" id="main-view">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div>
+          <div style="font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-dim)">Operação</div>
+          <div style="font-size:18px;font-weight:700" id="view-title">Projetos</div>
+        </div>
+        <div style="font-size:11px;color:var(--text-dim)" id="view-subtitle">Visão unificada</div>
+      </div>
+      <div id="view-stage" style="flex:1;min-height:0;overflow:auto"></div>
     </section>
 
     <!-- Right panels -->
@@ -200,6 +232,7 @@
 
     function renderTalentList() {
       const container = $("#talent-list");
+      if (!container) return;
       container.innerHTML = "";
       data.talentPool.slice(0, 4).forEach(t => {
         const row = document.createElement("div");
@@ -558,10 +591,100 @@
       el.innerHTML = `<div style="font-weight:700">${names}</div><div class="text-xs text-dim" style="margin-top:4px">Operação ativa agora</div>`;
     }
 
+    let currentView = 'list';
+    function setView(view) {
+      currentView = view;
+      document.querySelectorAll('.header-controls .chip').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.view === view);
+      });
+      renderView();
+    }
+
+    function renderView() {
+      const container = $("#view-stage");
+      if (!container) return;
+      const projects = data.projects || [];
+      const tasks = data.tasks || [];
+      const agents = [...(data.humans || []), ...(data.agents || [])];
+
+      if (currentView === 'list') {
+        container.innerHTML = projects.map(p => `
+          <div class="step">
+            <div class="step-icon">📁</div>
+            <div class="step-body">
+              <div class="step-title">${p.name}</div>
+              <div class="step-meta">${p.status} · ${p.progress}%</div>
+            </div>
+            <span class="step-pill step-status-doing">${p.progress}%</span>
+          </div>
+        `).join("") || `<div class="text-xs text-dim">Sem projetos.</div>`;
+      } else if (currentView === 'kanban') {
+        const cols = ['Backlog','Em andamento','Em revisão','Concluído'];
+        const map = { 'Backlog': [], 'Em andamento': [], 'Em revisão': [], 'Concluído': [] };
+        (tasks || []).forEach(t => {
+          const s = t.status || 'Backlog';
+          if (!map[s]) map[s] = [];
+          map[s].push(t);
+        });
+        container.innerHTML = `<div class="flex gap-2" style="flex-wrap:wrap;gap:8px">
+          ${cols.map(c => `<div style="flex:1;min-width:120px">
+            <div class="text-xs text-dim" style="margin-bottom:4px">${c}</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              ${(map[c] || []).map(t => `<div class="step" style="cursor:default">
+                <div class="step-body"><div class="step-title">${t.title}</div></div>
+                <span class="step-pill step-status-todo">${t.progress ?? 0}%</span>
+              </div>`).join('')}
+            </div>
+          </div>`).join('')}
+        </div>`;
+      } else if (currentView === 'gantt') {
+        const bars = (tasks || []).map((t, idx) => {
+          const start = idx * 18;
+          const width = Math.max(18, (t.progress || 0) * 1.8);
+          const agent = agents.find(a => a.id === (t.agentId || a.id)) || { name: '—', color: 'var(--accent)' };
+          return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+            <div style="width:90px;font-size:11px;color:var(--text-dim)">${t.title}</div>
+            <div style="flex:1;height:10px;border-radius:999px;background:rgba(255,255,255,0.06);overflow:hidden;position:relative">
+              <div style="position:absolute;left:${start}px;top:0;height:100%;width:${width}px;border-radius:999px;background:${agent.color || 'var(--accent)'};opacity:.85"></div>
+            </div>
+            <div style="width:36px;text-align:right;font-size:10px;color:var(--text-dim)">${t.progress ?? 0}%</div>
+          </div>`;
+        }).join('');
+        container.innerHTML = bars || `<div class="text-xs text-dim">Sem tarefas.</div>`;
+      } else if (currentView === 'steps') {
+        const all = [...(tasks || [])].map(t => ({ ...t, type: 'task' }));
+        container.innerHTML = all.map((item, idx) => stepHTML('v-' + idx, { title: item.title, status: item.status })).join('');
+      } else if (currentView === 'workload') {
+        const list = agents.map(a => {
+          const count = (tasks || []).filter(t => t.agentId === a.id).length;
+          const progress = Math.min(100, count * 25 + (a.progress || 0));
+          return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <div style="width:32px;text-align:center">${a.emoji}</div>
+            <div style="flex:1;min-width:0;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.name}</div>
+            <div style="width:80px;height:8px;border-radius:999px;background:rgba(255,255,255,0.06);overflow:hidden">
+              <div style="width:${progress}%;height:100%;border-radius:999px;background:${a.color || 'var(--accent)'}"></div>
+            </div>
+            <div style="width:32px;text-align:right;font-size:10px;color:var(--text-dim)">${count}</div>
+          </div>`;
+        }).join('');
+        container.innerHTML = list || `<div class="text-xs text-dim">Sem agentes.</div>`;
+      }
+    }
+
+    function refreshFilters() {
+      const statusEl = $("#filter-status");
+      const projectEl = $("#filter-project");
+      if (!statusEl || !projectEl) return;
+      const projects = data.projects || [];
+      projectEl.innerHTML = `<option value="all">Todos</option>` +
+        projects.map(p => `<option value="${p.name}">${p.name}</option>`).join("");
+    }
+
     function renderTalentGrid() {
       const grid = $("#talent-grid");
+      if (!grid) return;
       grid.innerHTML = "";
-      data.talentPool.forEach(t => {
+      (data.talentPool || []).forEach(t => {
         const card = document.createElement("div");
         card.className = "talent-card";
         card.innerHTML = `
