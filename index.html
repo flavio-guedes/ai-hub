@@ -59,6 +59,7 @@
       </div>
       <div class="stage" id="stage"></div>
       <div class="office-floor"></div>
+      <div class="office-tooltip" id="office-tooltip"></div>
     </section>
 
     <!-- Right panels -->
@@ -416,7 +417,23 @@
       meeting: {
         label: 'Reuniões',
         svg: `<svg xmlns='http://www.w3.org/2000/svg' width='72' height='56' viewBox='0 0 72 56' shape-rendering='crispEdges'><rect x='8' y='24' width='56' height='4' fill='#334155'/><rect x='16' y='28' width='12' height='14' fill='#1f2937'/><rect x='44' y='28' width='12' height='14' fill='#1f2937'/><rect x='20' y='16' width='8' height='8' fill='#60a5fa' opacity='.6'/><rect x='44' y='16' width='8' height='8' fill='#c084fc' opacity='.6'/></svg>`
+      },
+      plant: {
+        label: 'Clima',
+        svg: `<svg xmlns='http://www.w3.org/2000/svg' width='72' height='56' viewBox='0 0 72 56' shape-rendering='crispEdges'><rect x='28' y='36' width='16' height='12' fill='#1f2937'/><rect x='24' y='32' width='24' height='4' fill='#334155'/><rect x='32' y='14' width='12' height='18' fill='#46D89C' opacity='.35'/><rect x='28' y='22' width='4' height='10' fill='#1f2937'/></svg>`
+      },
+      clock: {
+        label: 'Tempo',
+        svg: `<svg xmlns='http://www.w3.org/2000/svg' width='72' height='56' viewBox='0 0 72 56' shape-rendering='crispEdges'><rect x='20' y='10' width='32' height='32' fill='#0f172a'/><rect x='20' y='10' width='32' height='32' fill='none' stroke='#23344D' stroke-width='2'/><rect x='36' y='14' width='4' height='16' fill='#FFC247' opacity='.8'/><rect x='34' y='28' width='14' height='4' fill='#36D8F0' opacity='.8'/></svg>`
       }
+    };
+
+    const OFFICE_TOOLTIPS = {
+      'pixelion': '🧑‍💼 Pixelion — Comando',
+      'logix': '⚙️ Logi-X — Operações',
+      'visiona': '🎨 Visiona — Criativo',
+      'uxel': '🧩 Uxel — Produto',
+      'stratego': '♟️ Stratego — Estratégia'
     };
 
     function spriteHTMLFor(entity) {
@@ -453,7 +470,9 @@
         { key: "shelf", x: 9, y: 2, w: 3, h: 3 },
         { key: "board", x: 1, y: 5, w: 3, h: 3 },
         { key: "meeting", x: 1, y: 1, w: 2, h: 2 },
-        { key: "screen", x: 10, y: 6, w: 3, h: 2 }
+        { key: "screen", x: 10, y: 6, w: 3, h: 2 },
+        { key: "plant", x: 4, y: 6, w: 2, h: 2 },
+        { key: "clock", x: 9, y: 5, w: 2, h: 2 }
       ];
       decors.forEach(d => {
         const item = document.createElement("div");
@@ -461,6 +480,7 @@
         item.style.gridColumn = `${d.x} / span ${d.w}`;
         item.style.gridRow = `${d.y} / span ${d.h}`;
         item.dataset.status = "";
+        item.dataset.decorLabel = DECOR[d.key].label;
         item.innerHTML = `<div style="padding:10px;display:flex;flex-direction:column;gap:10px">
           ${DECOR[d.key].svg}
           <div class="office-label">${DECOR[d.key].label}</div>
@@ -487,8 +507,29 @@
             }
           }
         });
+        item.addEventListener("mouseenter", (evt) => {
+          const tooltip = $("#office-tooltip");
+          tooltip.textContent = DECOR[d.key].label;
+          tooltip.classList.add("visible");
+          positionTooltip(evt);
+        });
+        item.addEventListener("mouseleave", () => {
+          const tooltip = $("#office-tooltip");
+          tooltip.classList.remove("visible");
+        });
+        item.addEventListener("mousemove", positionTooltip);
         stage.appendChild(item);
       });
+    }
+
+    function positionTooltip(evt) {
+      const tooltip = $("#office-tooltip");
+      const office = $("#office");
+      const rect = office.getBoundingClientRect();
+      const x = evt.clientX - rect.left + 10;
+      const y = evt.clientY - rect.top + 10;
+      tooltip.style.left = `${x}px`;
+      tooltip.style.top = `${y}px`;
     }
 
     function renderFeed() {
