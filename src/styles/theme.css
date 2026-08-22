@@ -561,6 +561,49 @@
       .talent-grid { grid-template-columns: repeat(3, 1fr); }
     }
 
+    @media (max-width: 900px) {
+      .app {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto auto auto;
+        grid-template-areas:
+          "header"
+          "office"
+          "right"
+          "nav"
+          "right2";
+        gap: 10px;
+        padding: 10px;
+      }
+      .header { flex-wrap: wrap; gap: 10px; }
+      .header .kpis { flex-wrap: wrap; gap: 6px; }
+      .kpi { min-width: 56px; padding: 6px 8px; }
+      .kpi .value { font-size: 15px; }
+      .office { min-height: 56vh; }
+      .stage { overflow: auto; padding: 48px 12px 20px; }
+      .agent-spot { border-radius: 12px; }
+      .nav { overflow: visible; }
+      .right, .right2 { overflow: visible; }
+      .panel { padding: 10px; }
+      .talent-grid { grid-template-columns: repeat(2, 1fr); }
+      .detail { left: 10px; right: 10px; bottom: 10px; max-height: 50vh; }
+    }
+
+    @media (max-width: 560px) {
+      .talent-grid { grid-template-columns: 1fr; }
+      .kpi { min-width: 48px; }
+      .kpi .value { font-size: 13px; }
+      .office { min-height: 50vh; }
+      .stage { padding: 40px 8px 14px; gap: 10px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
     /* Scrollbar */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: transparent; }
